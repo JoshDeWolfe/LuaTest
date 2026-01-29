@@ -168,12 +168,13 @@ function ActorModel:damage(damageAmount)
   else
     self:setInvincible()
   end
+  self.actor:onDamage(self)
 end
 
 function ActorModel:inflictDeath()
   self.actor.shouldDraw = false
   self.actor.active = false
-  self.actor:onDeath()
+  self.actor:onDeath(self)
 end
 
 function ActorModel:rollNewDirection(dt)

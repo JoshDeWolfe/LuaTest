@@ -1,6 +1,4 @@
-
--- require
-HealthBar = require ("code/ui/healthbar")
+-- Required
 ActorModel = require ("code/actors/actorModel")
 ActorView = require ("code/actors/actorView")
 
@@ -57,13 +55,14 @@ function Actor.new(params)
   -- components
   self.actorModel = ActorModel.new(self)
   self.actorView = ActorView.new(self.actorModel)
-  self.healthBar = HealthBar.new()
   -- fields
   self.active = true
   self.shouldDraw = true
   self.receivesInputs = false
   self.tags = { "" }
   self:setSize(params.width or 64, params.height or 64)
+  -- listeners
+  self.onDamageListeners = { }
   return self
 end
 
@@ -222,8 +221,23 @@ function Actor:checkCollision(otherActor)
 end
 
 
-function Actor:onDeath()
-  self.healthBar.shouldDraw = false
+function Actor:onDeath(actorModel)
+  --self.healthBar.shouldDraw = false
+end
+
+function Actor:unbindOnDamage()
+end
+
+function Actor:bindOnDamage(newListener)
+  table.insert(self.onDamageListeners, newListener)
+end
+
+function Actor:onDamage(actorModel)
+  if self.onDamageListeners ~= nil and #self.onDamageListeners > 0 then
+    for __, l in ipairs(self.onDamageListeners) do
+      l:onDamageEvent(self.actorModel)
+    end
+  end
 end
 
 
@@ -235,18 +249,12 @@ function Actor:update(dt)
     self:processInput(dt)
   end
   self.actorModel:update(dt)
-  if self.healthBar ~= nil then
-    self.healthBar:setPercent(self.actorModel.hp / self.actorModel.hpMax)
-  end
 end
 
 
 function Actor:draw()
   if self.shouldDraw then
     self.actorView:draw(self.actorModel)
-  end
-  if self.healthBar ~= nil and self:hasTag("player") then
-    self.healthBar:draw()
   end
 end
 

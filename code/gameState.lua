@@ -1,5 +1,7 @@
+-- Required
 Actor = require "code/actors/actor"
 ViewModel = require "code/gameStateViewModel"
+UIController = require "code/ui/uiController"
 
 -- Object
 local GameState = {}
@@ -19,6 +21,8 @@ function GameState.new(params)
   self.player = {}
   self.enemies = {}
   self.numEnemies = 10
+  -- ui
+  self.uiController = {}
   return self
 end
 
@@ -26,6 +30,7 @@ function GameState:initialize()
   DebugText.addText("Initializing Game State")
   self:setupEnemies()
   self:setupPlayer()
+  self.uiController = UIController.new(self)
 end
 
 function GameState:setupEnemies()
@@ -82,6 +87,7 @@ function GameState:update(dt)
       end
     end
   end
+  self.uiController:update(self)
 end
 
 function GameState:draw()
@@ -102,6 +108,8 @@ function GameState:draw()
       self.enemies[i]:draw() 
     end
   end
+
+  self.uiController:draw()
 end
 
 return GameState
