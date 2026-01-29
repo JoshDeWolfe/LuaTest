@@ -1,6 +1,6 @@
 Made using MVVM design pattern:
 
-When the gameState is created, it creates the Player and enemies
+When the gameState is created, it creates the Player and enemies.  
 The gameStateModel determines how and where enemies are generated, as well as the background graphics
 
 Actors are composed of:
