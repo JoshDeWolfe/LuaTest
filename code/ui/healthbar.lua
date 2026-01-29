@@ -7,6 +7,7 @@ HealthBar.__index = HealthBar
 function HealthBar.new()
   local self = setmetatable({}, HealthBar)
   self.percent = 100
+  self.shouldDraw = true
   return self
 end
 
@@ -15,6 +16,9 @@ function HealthBar:setPercent(newPercent)
 end
 
 function HealthBar:draw()
+  if self.shouldDraw == false then
+    return
+  end
   local padding = 4
   if (self.percent == nil) then
     self.percent = 1

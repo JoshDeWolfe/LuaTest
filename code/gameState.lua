@@ -1,4 +1,4 @@
-Actor = require "code/actor"
+Actor = require "code/actors/actor"
 ViewModel = require "code/gameStateViewModel"
 
 -- Object
@@ -33,7 +33,7 @@ function GameState:setupEnemies()
   self.enemies = {}
   for i = 1, self.numEnemies, 1 do
     self.enemies[i] = Actor.new()
-    self.enemies[i]:setIsEnemy() 
+    self.enemies[i]:setIsEnemy()
   end
   -- Position enemies
   self.viewModel:setupEnemyStart(self.enemies)
@@ -62,16 +62,20 @@ function GameState:deactivate()
 end
 
 function GameState:update(dt)
+  -- update player
   if self.player ~= nil then
     self.player:update(dt)
   end
   if self.enemies ~= nil then
+     -- update enemies
     for i = 1, #self.enemies, 1 do
       self.enemies[i]:update(dt)
     end
+    -- check collision: player versus enemies
     for i = 1, #self.enemies, 1 do
       self.player:checkCollision(self.enemies[i])
     end
+    -- check collision: enemies against eachother
     for i = 1, #self.enemies, 1 do
       for n = 1, #self.enemies, 1 do
         self.enemies[n]:checkCollision(self.enemies[i])

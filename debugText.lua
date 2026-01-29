@@ -11,6 +11,9 @@ function DebugText.setText(newText)
 end
 
 function DebugText.addText(newText)
+  if newText == nil then
+    newText = "nil"
+  end
   displayText = displayText .. "\n" .. newText
 end
 
